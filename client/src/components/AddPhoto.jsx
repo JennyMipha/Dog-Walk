@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import propTypes from 'prop-types';
 import style from 'styled-components';
 import { IoIosCloseCircle } from 'react-icons/io';
@@ -69,12 +69,24 @@ const SkipButton = style(AddButton)`
 `;
 
 function AddPhoto({
-  photos, setPhotos, setUploadPhoto, submit, setSubmit,
+  photo, setPhoto, setUploadPhoto, setPhotoURL, submit, setSubmit,
 }) {
+  const [formData, setFormData] = useState(null);
   const handleSubmit = () => {
-    console.log('Submit!');
-    setSubmit(!submit);
-    setUploadPhoto(false);
+    const data = {
+      file: photo,
+      upload_preset: 'qhv9zbub',
+    };
+    axios.post('https://api.cloudinary.com/v1_1/jennymipha/image/upload', data)
+      .then((result) => {
+        console.log('Cloudinary POST success, result = ', result);
+        setSubmit(!submit);
+        setUploadPhoto(false);
+        setPhotoURL(result.data.secure_url);
+      })
+      .catch((err) => {
+        console.log('Cloudinary POST failed, err = ', err);
+      });
   };
   return (
     <ModalContainer>
@@ -88,7 +100,12 @@ function AddPhoto({
         <CloseIcon />
       </CloseButton>
       {/* <Header>Add Photos</Header> */}
-      <UploadPhotos photos={photos} setPhotos={setPhotos} />
+      <UploadPhotos
+        photo={photo}
+        setPhoto={setPhoto}
+        formData={formData}
+        setFormData={setFormData}
+      />
       <SubmitContainer>
         <SkipButton type="button" onClick={() => handleSubmit()}>Skip</SkipButton>
         <AddButton type="button" onClick={() => handleSubmit()}>Add</AddButton>

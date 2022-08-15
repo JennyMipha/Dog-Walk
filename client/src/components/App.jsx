@@ -7,6 +7,7 @@ import style from 'styled-components';
 import HeadBar from './HeadBar';
 import Map from './Map';
 import AddPhoto from './AddPhoto';
+import NavButton from './NavButton';
 
 const MainContainer = style.div`
   display: flex;
@@ -27,19 +28,12 @@ const MapContainer = style.div`
 `;
 
 function App() {
-  const libraries = ['places'];
+  const [libraries] = useState(['places']);
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: 'AIzaSyB1jM-RjsMLhbhEl99_FBhFI5ujzOD8Nig',
     language: 'en',
     libraries,
   });
-  // if (!isLoaded) {
-  //   return (
-  //     <div>
-  //       Loading
-  //     </div>
-  //   );
-  // }
 
   const mapRef = useRef();
   const [walks, setWalks] = useState([]);
@@ -48,7 +42,10 @@ function App() {
   const [rating, setRating] = useState(0);
   const [uploadPhoto, setUploadPhoto] = useState(false);
   const [submit, setSubmit] = useState(false);
-  const [photos, setPhotos] = useState([]);
+  const [photo, setPhoto] = useState('');
+  const [photoURL, setPhotoURL] = useState('');
+  const [showMap, setShowMap] = useState(true);
+  const [showList, setShowList] = useState(false);
 
   const onMapLoad = useCallback((map) => {
     mapRef.current = map;
@@ -68,7 +65,7 @@ function App() {
         user: 'hulu',
         lat,
         lng,
-        photos,
+        photos: [photoURL],
         date,
         rating,
       };
@@ -77,20 +74,30 @@ function App() {
         .then(() => {
           console.log('POST success!');
           panTo({ lat, lng });
+          axios.get('walk')
+            .then((result) => {
+              console.log('GET success, result.data = ', result.data);
+              setWalks(result.data);
+            })
+            .catch((err) => {
+              console.log('GET failed, err = ', err);
+            });
         })
         .catch((err) => {
           console.log('POST failed! err = ', err);
         });
-      setPhotos([]);
+      setPhoto('');
+      setPhotoURL('');
+    } else {
+      axios.get('walk')
+        .then((result) => {
+          console.log('GET success, result.data = ', result.data);
+          setWalks(result.data);
+        })
+        .catch((err) => {
+          console.log('GET failed, err = ', err);
+        });
     }
-    axios.get('walk')
-      .then((result) => {
-        console.log('GET success, result.data = ', result.data);
-        setWalks(result.data);
-      })
-      .catch((err) => {
-        console.log('GET failed, err = ', err);
-      });
   }, [submit]);
 
   if (!isLoaded) {
@@ -116,13 +123,15 @@ function App() {
       </HeadBarContainer>
       {uploadPhoto && (
       <AddPhoto
-        photos={photos}
-        setPhotos={setPhotos}
+        photo={photo}
+        setPhoto={setPhoto}
+        setPhotoURL={setPhotoURL}
         setUploadPhoto={setUploadPhoto}
         submit={submit}
         setSubmit={setSubmit}
       />
       )}
+      {showMap && (
       <MapContainer>
         <Map
           lat={lat}
@@ -134,6 +143,13 @@ function App() {
           onMapLoad={onMapLoad}
         />
       </MapContainer>
+      )}
+      <NavButton
+        setShowMap={setShowMap}
+        showMap={showMap}
+        setShowList={setShowList}
+        showList={showList}
+      />
     </MainContainer>
   );
 }

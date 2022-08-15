@@ -33,7 +33,6 @@ function Add({
 }) {
   const validateInput = () => {
     if (lat && lng && rating) {
-      console.log('Input validated!');
       setUploadPhoto(true);
     }
   };

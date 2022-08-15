@@ -2,11 +2,11 @@ import React, { useState, useCallback } from 'react';
 import propTypes from 'prop-types';
 import style from 'styled-components';
 import {
-  GoogleMap, Marker,
+  GoogleMap, Marker, InfoWindow,
 } from '@react-google-maps/api';
 import mapStyle from '../styles/mapStyles';
 import Locate from './Locate';
-import InfoModal from './InfoModal';
+import WalkInfo from './WalkInfo';
 
 require('dotenv').config();
 
@@ -59,12 +59,12 @@ function Map({ lat, lng, walks, mapRef, panTo, onMapLoad }) {
         onClick={onMapClick}
         onLoad={onMapLoad}
       >
-        {walks.map((marker) => (
+        {walks.map((walk) => (
           <Marker
-            key={marker.id}
+            key={walk._id}
             position={{
-              lat: marker.lat,
-              lng: marker.lng,
+              lat: walk.lat,
+              lng: walk.lng,
             }}
             icon={{
               url: '/paw.png',
@@ -73,16 +73,12 @@ function Map({ lat, lng, walks, mapRef, panTo, onMapLoad }) {
               anchor: new window.google.maps.Point(15, 15),
             }}
             onClick={() => {
-              setSelected(marker);
+              setSelected(walk);
             }}
           />
         ))}
         { selected ? (
-          <InfoModal
-            position={{ lat: selected.lat, lng: selected.lng }}
-            selected={selected}
-            setSelected={setSelected}
-          />
+          <WalkInfo position={{ lat: selected.lat, lng: selected.lng }} selected={selected} />
         ) : null}
       </GoogleMap>
     </MapContainer>

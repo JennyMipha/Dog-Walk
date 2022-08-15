@@ -1,13 +1,11 @@
 import React from 'react';
+import { InfoWindow } from '@react-google-maps/api';
 import style from 'styled-components';
 import { IoIosCloseCircle } from 'react-icons/io';
 import propTypes from 'prop-types';
+import Star from './Star';
 
 const ModalContainer = style.div`
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
   width: 200px;
   height: 300px;
   background: white;
@@ -44,10 +42,22 @@ const CloseIcon = style(IoIosCloseCircle)`
   }
 `;
 
-function InfoModal({ position, setSelected }) {
+const Stars = style.div`
+  display: flex;
+  height: 100%;
+  width: 35%;
+  align-items: center;
+`;
+
+function InfoModal({ position, selected, setSelected }) {
   return (
-    <ModalContainer>
-      <CloseButton
+    <InfoWindow
+      position={position}
+      onCloseClick={() => {
+        setSelected(null);
+      }}
+    >
+      {/* <CloseButton
         type="button"
         onClick={() => {
           document.documentElement.style.overflow = 'auto';
@@ -55,8 +65,20 @@ function InfoModal({ position, setSelected }) {
         }}
       >
         <CloseIcon />
-      </CloseButton>
-    </ModalContainer>
+      </CloseButton> */}
+      <div>
+        Rating:
+        {selected.rating}
+        {[1, 2, 3, 4, 5].map((ele) => (
+          <Stars>
+            <Star
+              key={ele}
+              filled={ele <= selected.rating}
+            />
+          </Stars>
+        ))}
+      </div>
+    </InfoWindow>
   );
 }
 

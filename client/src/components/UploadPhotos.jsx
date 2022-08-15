@@ -49,20 +49,34 @@ const Thumbnail = style.img`
   border-radius: 2px;
 `;
 
-function UploadPhotos({ photos, setPhotos }) {
+function UploadPhotos({ formData, setFormData, photo, setPhoto }) {
+  // multiple files
+  // const previewFile = (file) => {
+  //   const reader = new FileReader();
+  //   if (file) {
+  //     reader.readAsDataURL(file);
+  //     reader.onloadend = () => {
+  //       setPhotos((pre) => [...pre, reader.result]);
+  //     };
+  //   }
+  // };
+  // const handleFileInputChange = (e) => {
+  //   const inputFiles = e.target.files;
+  //   // console.log('In AddPhoto, file = ', inputFiles);
+  //   Object.keys(inputFiles).map((key) => previewFile(inputFiles[key]));
+  // };
   const previewFile = (file) => {
     const reader = new FileReader();
     if (file) {
       reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setPhotos((pre) => [...pre, reader.result]);
+      reader.onloadend = async () => {
+        await setPhoto(reader.result);
       };
     }
   };
   const handleFileInputChange = (e) => {
     const inputFiles = e.target.files;
-    // console.log('In AddPhoto, file = ', inputFiles);
-    Object.keys(inputFiles).map((key) => previewFile(inputFiles[key]));
+    previewFile(inputFiles[0]);
   };
   return (
     <UploadPhotosContainer>
@@ -73,23 +87,21 @@ function UploadPhotos({ photos, setPhotos }) {
           accept="image/*"
           // eslint-disable-next-line react/jsx-no-bind
           onChange={handleFileInputChange}
-          multiple
+          // multiple
         />
         <UploadButton htmlFor="uploadFile">
           <PlusIcon />
         </UploadButton>
       </ButtonContainer>
       <ThumbnailContainer>
-        {photos
-        && photos.map((preview, index) => (
+        {photo && (
           <Thumbnail
-            src={preview}
+            src={photo}
             alt="Preview"
             height="100px"
             // eslint-disable-next-line react/no-array-index-key
-            key={index}
           />
-        ))}
+        )}
       </ThumbnailContainer>
     </UploadPhotosContainer>
   );

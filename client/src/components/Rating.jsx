@@ -17,7 +17,6 @@ function Rating({ rating, setRating }) {
           key={ele}
           filled={ele <= rating}
           onClick={() => {
-            console.log('current rating = ', rating, ' clickedRating = ', ele);
             setRating(ele);
           }}
         />

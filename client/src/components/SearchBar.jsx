@@ -57,7 +57,7 @@ function SearchBar({ panTo, setLat, setLng }) {
     try {
       const result = await getGeocode({ address: val });
       const { lat, lng } = await getLatLng(result[0]);
-      console.log('lat = ', lat, 'lng = ', lng);
+      console.log('Suggestion selected, lat = ', lat, 'lng = ', lng);
       setLat(lat);
       setLng(lng);
       panTo({ lat, lng });
