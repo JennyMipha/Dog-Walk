@@ -15,7 +15,7 @@
 ## Overview
 Dog-Walk is a map-based web application for dog walking journaling. Integrated with Google Maps API, users are allowed to search, rate, and upload photos for a specific location with their dog walking experience.
 
-Key Features include:
+Key features include:
 - Search for a location
 - Rate and upload photos 
 - Provide type-ahead-search functionality while searching for a location
