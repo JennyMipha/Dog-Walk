@@ -18,10 +18,10 @@ Dog-Walk is a map-based web application for dog walking journaling. Integrated w
 Key features include:
 - Search for a location
 - Rate and upload photos 
-- Provide type-ahead-search functionality while searching for a location
+- Provide type-ahead-search functionality in the search bar
 - Zoom in and out of the map
 - Locate user's current location on map
-- Map view and list view of the dog walking journals
+- Provide map view and list view of user's dog walking journals
 
 
 ### Map View
